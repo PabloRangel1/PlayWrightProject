@@ -1,19 +1,33 @@
+import { request } from 'http'
+
 const { test: base, expect } = require('@playwright/test')
 
-const {LandingPage} = require('../pages/LandingPage')
-const { LoginPage } = require('../pages/LoginPage')
-const { Toast } = require('../pages/Components')
-const { MoviePage } = require('../pages/MoviePage')
+const { Leads} = require('./actions/Leads')
+const { Login } = require('./actions/Login')
+const { Movies } = require('./actions/Movies')
+const { Toast } = require('./actions/Components')
 // injetando os page objects dentro da camada nativa do playwirght
+
+const { Api } = require('./api')
+
 const test = base.extend({
     page: async({page}, use) => {
-        await use({
-            ...page, //Diz que vamos usar o page do proprio playwright porem vamos add novas instancias
-            landing: new LandingPage(page),
-            login: new LoginPage(page),
-            movie: new MoviePage(page),
-            toast: new Toast(page)
-        })
+        
+        const context = page
+
+        context['leads'] = new Leads(page)
+        context['login'] = new Login(page)
+        context['movie'] = new Movies(page)
+        context['toast'] = new Toast(page)
+
+        await use(context)
+    },
+    request: async({request}, use) => {
+        const context = request
+
+        context['api'] = new Api(request)
+
+        await use(context)
     }
 })
 

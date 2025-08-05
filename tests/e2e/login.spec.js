@@ -1,22 +1,10 @@
-const { test, expect } = require('../support')
-const { LoginPage } = require('../pages/LoginPage')
-const { Toast } = require('../pages/Components')
-const { MoviePage } = require('../pages/MoviePage')
+const { test} = require('../support')
 
-let loginPage
-let toast 
-let movie
-
-test.beforeEach(({ page }) => {
-    loginPage = new LoginPage(page)
-    toast = new Toast(page)
-    movie = new MoviePage(page)
-})
 
 test('deve rodar como administrador', async({ page }) => {
     await page.login.visit()
     await page.login.submitLogin('admin@zombieplus.com','pwd123')
-    await page.movie.isLoggedIn()
+    await page.login.isLoggedIn('Admin')
 })   
 
 test('Não deve rodar como senha incorreta', async({ page }) => {
