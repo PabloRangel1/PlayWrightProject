@@ -16,18 +16,33 @@ export class Api{
         })
 
         expect(response.ok()).toBeTruthy()
-
         const body = JSON.parse(await response.text())
-
         this.token = 'Bearer ' + body.token
     }
 
-    async postMovie(movie){
+     async getCompanyIdByName(companyName) {
+        
+        const response = await this.request.get('http://localhost:3333/companies', {
+            headers: {
+                Authorization: this.token
+            },
+            params: {
+                name: companyName
+            }
+        })
 
-        await this.setToken() // A função que cadastra o filme, já faz a geração do token
+        expect(response.ok()).toBeTruthy()
+
+        const body = JSON.parse(await response.text())
+        return body.data[0].id
+    }
+
+    async postMovie(movie) {
+        
+        const companyId = await this.getCompanyIdByName(movie.company)
 
         const response = await this.request.post('http://localhost:3333/movies', {
-            headers:{
+            headers: {
                 Authorization: this.token,
                 ContentType: 'multipart/form-data',
                 Accept: 'application/json, text/plain, */*'
@@ -35,11 +50,13 @@ export class Api{
             multipart: {
                 title: movie.title,
                 overview: movie.overview,
-                company_id: 'f88bd0f6-ded8-4211-9aed-acced053647b',
+                company_id: companyId,
                 release_year: movie.release_year,
                 featured: movie.featured
             }
         })
+
         expect(response.ok()).toBeTruthy()
+
     }
 }
