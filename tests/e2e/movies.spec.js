@@ -22,6 +22,8 @@ test('Deve poder remover um filme', async ({page, request}) => {
     await request.api.postMovie(movie) // pré cadastro
 
     await page.login.do('admin@zombieplus.com', 'pwd123', 'Admin')
+    await page.movie.remove(movie.title)
+    await page.popup.haveText('Filme removido com sucesso.')
 
 })
 
@@ -48,4 +50,18 @@ test('Não deve cadastrar quandos os campos obrigatórios não são preenchidos'
         'Campo obrigatório',
         'Campo obrigatório'
     ])
+})
+
+test('Deve realizar busca pelo termo zumbi', async({ page, request}) => {
+    const movies = data.search
+
+    movies.data.forEach( async (m) => {
+        await request.api.postMovie(m)
+    })
+    await page.login.do('admin@zombieplus.com', 'pwd123', 'Admin')
+    await page.movie.search(movies.input)
+
+    const rows = page.getByRole('row')
+    await expect(rows).toContainText(movies.outputs)
+
 })
