@@ -12,11 +12,11 @@ test('deve cadasrar para um lead na fila de espera ', async ({ page }) => {
   //submitLeadForm
   await page.leads.submitleadForm(leadName, leadEmail)
   // toastHaveText
-  const messageExpect = 'Agradecemos por compartilhar seus dados conosco. Em breve, nossa equipe entrará em contato!'
-  await page.toast.containText(messageExpect)
+  const messageExpect = 'Agradecemos por compartilhar seus dados conosco. Em breve, nossa equipe entrará em contato.'
+  await page.popup.haveText(messageExpect)
 });
 
-test('Não deve quando email já existe ', async ({ page, request }) => {
+test('Não deve quando cadastrar quando email já existe ', async ({ page, request }) => {
   const leadName = faker.person.fullName();
   const leadEmail = faker.internet.email();
 
@@ -33,8 +33,8 @@ test('Não deve quando email já existe ', async ({ page, request }) => {
   await page.leads.openLeadModel()
   await page.leads.submitleadForm(leadName, leadEmail) 
 
-  const message = 'O endereço de e-mail fornecido já está registrado em nossa fila de espera.'
-  await page.toast.containText(message)
+  const message = 'Verificamos que o endereço de e-mail fornecido já consta em nossa lista de espera. Isso significa que você está um passo mais perto de aproveitar nossos serviços.'
+  await page.popup.haveText(message)
 });
 
 test('Não deve cadastrar email incorreto ', async ({ page }) => {
