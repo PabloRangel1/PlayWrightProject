@@ -17,6 +17,7 @@ export class Api{
 
         expect(response.ok()).toBeTruthy()
         const body = JSON.parse(await response.text())
+        console.log(body.token)
         this.token = 'Bearer ' + body.token
     }
 
@@ -59,4 +60,31 @@ export class Api{
         expect(response.ok()).toBeTruthy()
 
     }
+
+    async postTv(movie) {
+        
+        const companyId = await this.getCompanyIdByName(movie.company)
+
+        const response = await this.request.post('http://localhost:3333/tvshows', {
+            headers: {
+                Authorization: this.token,
+                ContentType: 'multipart/form-data',
+                Accept: 'application/json, text/plain, */*'
+            },
+            multipart: {
+                title: movie.title,
+                overview: movie.overview,
+                company_id: companyId,
+                seasons: movie.seasons,
+                release_year: movie.release_year,
+                featured: movie.featured
+            }
+        })
+
+        expect(response.ok()).toBeTruthy()
+
+    }
+
+    
 }
+

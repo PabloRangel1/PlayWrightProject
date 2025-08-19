@@ -1,4 +1,3 @@
-import { request } from 'http'
 
 const { test: base, expect } = require('@playwright/test')
 
@@ -6,6 +5,7 @@ const { Leads} = require('./actions/Leads')
 const { Login } = require('./actions/Login')
 const { Movies } = require('./actions/Movies')
 const { Popup } = require('./actions/Components')
+const { Tvshows } = require('./actions/Tvshows')
 // injetando os page objects dentro da camada nativa do playwirght
 
 const { Api } = require('./api')
@@ -19,16 +19,17 @@ const test = base.extend({
         context['login'] = new Login(page)
         context['movie'] = new Movies(page)
         context['popup'] = new Popup(page)
+        context['tv'] = new Tvshows(page)
 
         await use(context)
     },
-    request: async({request}, use) => {
-        const context = request
+    request: async ({request}, use) => {
+        const api = new Api(request)
+        await api.setToken()
 
-        context['api'] = new Api(request)
-        await context['api'].setToken()
+        request['api'] = api
 
-        await use(context)
+        await use(request)
     }
 })
 
