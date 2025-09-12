@@ -2,6 +2,9 @@
 
 Repositório do projeto de testes automatizados com Playwright
 
+▶️[Vídeo de demonstração](https://www.youtube.com/watch?v=XCPlTiDiaxQ)
+
+
 ##  Tecnologias
 - Node.js
 - Playwright
